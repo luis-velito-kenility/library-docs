@@ -1,0 +1,762 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Guía de Diseño Atómico</title>
+    <script src="https://cdn.tailwindcss.com?plugins=typography"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            fontFamily: { sans: ["Inter", "ui-sans-serif", "system-ui", "sans-serif"] },
+            colors: { brand: { 50: '#eef2ff', 600: '#4f46e5' } }
+          }
+        }
+      }
+    </script>
+    <style>
+      /* Estilos mínimos para el TOC activo */
+      .toc-link-active { color: rgb(79 70 229); font-weight: 600; }
+      html { scroll-behavior: smooth; }
+      /* Drawer móvil con :target */
+      #mobileToc { display: none; }
+      #mobileToc:target { display: block; }
+      /* Resaltar heading cuando es objetivo */
+      .prose h2:target, .prose h3:target { color: rgb(79 70 229); }
+    </style>
+  </head>
+  <body class="bg-slate-50 text-slate-800">
+    <div class="min-h-screen flex">
+      <!-- Sidebar -->
+      <aside class="hidden md:flex w-72 flex-col border-r border-slate-200 bg-white/80 backdrop-blur supports-[backdrop-filter]:bg-white/60">
+        <div class="px-5 py-4 border-b border-slate-200">
+          <h1 class="text-sm font-semibold text-slate-700">Índice</h1>
+        </div>
+        <nav id="toc" class="flex-1 overflow-y-auto px-3 py-3">
+          <ul class="space-y-1">
+            <li>
+              <a href="#1-átomos" class="block text-sm text-slate-600 hover:text-slate-900 hover:bg-slate-100 rounded px-2 py-1">1. Átomos</a>
+              <ul class="mt-1 ml-3 space-y-1">
+                <li><a href="#1-1-textinput" class="block text-sm text-slate-600 hover:text-slate-900 hover:bg-slate-100 rounded px-2 py-1">1.1 TextInput</a></li>
+                <li><a href="#1-2-passwordinput" class="block text-sm text-slate-600 hover:text-slate-900 hover:bg-slate-100 rounded px-2 py-1">1.2 PasswordInput</a></li>
+                <li><a href="#1-3-emailinput" class="block text-sm text-slate-600 hover:text-slate-900 hover:bg-slate-100 rounded px-2 py-1">1.3 EmailInput</a></li>
+                <li><a href="#1-4-numericbadge" class="block text-sm text-slate-600 hover:text-slate-900 hover:bg-slate-100 rounded px-2 py-1">1.4 NumericBadge</a></li>
+                <li><a href="#1-5-button" class="block text-sm text-slate-600 hover:text-slate-900 hover:bg-slate-100 rounded px-2 py-1">1.5 Button</a></li>
+                <li><a href="#1-6-iconbutton" class="block text-sm text-slate-600 hover:text-slate-900 hover:bg-slate-100 rounded px-2 py-1">1.6 IconButton</a></li>
+                <li><a href="#1-7-icontoggle" class="block text-sm text-slate-600 hover:text-slate-900 hover:bg-slate-100 rounded px-2 py-1">1.7 IconToggle</a></li>
+                <li><a href="#1-8-checkbox" class="block text-sm text-slate-600 hover:text-slate-900 hover:bg-slate-100 rounded px-2 py-1">1.8 Checkbox</a></li>
+                <li><a href="#1-9-radiobutton" class="block text-sm text-slate-600 hover:text-slate-900 hover:bg-slate-100 rounded px-2 py-1">1.9 RadioButton</a></li>
+                <li><a href="#1-10-switch" class="block text-sm text-slate-600 hover:text-slate-900 hover:bg-slate-100 rounded px-2 py-1">1.10 Switch</a></li>
+                <li><a href="#1-11-tag" class="block text-sm text-slate-600 hover:text-slate-900 hover:bg-slate-100 rounded px-2 py-1">1.11 Tag</a></li>
+                <li><a href="#1-12-avatar" class="block text-sm text-slate-600 hover:text-slate-900 hover:bg-slate-100 rounded px-2 py-1">1.12 Avatar</a></li>
+                <li><a href="#1-13-searchinput" class="block text-sm text-slate-600 hover:text-slate-900 hover:bg-slate-100 rounded px-2 py-1">1.13 SearchInput</a></li>
+                <li><a href="#1-14-dropdown" class="block text-sm text-slate-600 hover:text-slate-900 hover:bg-slate-100 rounded px-2 py-1">1.14 Dropdown</a></li>
+                <li><a href="#1-15-tooltip" class="block text-sm text-slate-600 hover:text-slate-900 hover:bg-slate-100 rounded px-2 py-1">1.15 Tooltip</a></li>
+                <li><a href="#1-16-progressbar" class="block text-sm text-slate-600 hover:text-slate-900 hover:bg-slate-100 rounded px-2 py-1">1.16 ProgressBar</a></li>
+                <li><a href="#1-17-tagstatus" class="block text-sm text-slate-600 hover:text-slate-900 hover:bg-slate-100 rounded px-2 py-1">1.17 TagStatus</a></li>
+              </ul>
+            </li>
+            <li>
+              <a href="#2-moléculas" class="block text-sm text-slate-600 hover:text-slate-900 hover:bg-slate-100 rounded px-2 py-1">2. Moléculas</a>
+              <ul class="mt-1 ml-3 space-y-1">
+                <li><a href="#2-1-searchbar" class="block text-sm text-slate-600 hover:text-slate-900 hover:bg-slate-100 rounded px-2 py-1">2.1 SearchBar</a></li>
+                <li><a href="#2-2-usermenu" class="block text-sm text-slate-600 hover:text-slate-900 hover:bg-slate-100 rounded px-2 py-1">2.2 UserMenu</a></li>
+                <li><a href="#2-3-card" class="block text-sm text-slate-600 hover:text-slate-900 hover:bg-slate-100 rounded px-2 py-1">2.3 Card</a></li>
+                <li><a href="#2-4-mediacard" class="block text-sm text-slate-600 hover:text-slate-900 hover:bg-slate-100 rounded px-2 py-1">2.4 MediaCard</a></li>
+                <li><a href="#2-5-coursecard" class="block text-sm text-slate-600 hover:text-slate-900 hover:bg-slate-100 rounded px-2 py-1">2.5 CourseCard</a></li>
+                <li><a href="#2-6-filecard" class="block text-sm text-slate-600 hover:text-slate-900 hover:bg-slate-100 rounded px-2 py-1">2.6 FileCard</a></li>
+                <li><a href="#2-7-avatargroup" class="block text-sm text-slate-600 hover:text-slate-900 hover:bg-slate-100 rounded px-2 py-1">2.7 AvatarGroup</a></li>
+                <li><a href="#2-8-pagination" class="block text-sm text-slate-600 hover:text-slate-900 hover:bg-slate-100 rounded px-2 py-1">2.8 Pagination</a></li>
+                <li><a href="#2-9-tabs" class="block text-sm text-slate-600 hover:text-slate-900 hover:bg-slate-100 rounded px-2 py-1">2.9 Tabs</a></li>
+                <li><a href="#2-10-sidebarmenu" class="block text-sm text-slate-600 hover:text-slate-900 hover:bg-slate-100 rounded px-2 py-1">2.10 SidebarMenu</a></li>
+              </ul>
+            </li>
+            <li>
+              <a href="#3-organismos" class="block text-sm text-slate-600 hover:text-slate-900 hover:bg-slate-100 rounded px-2 py-1">3. Organismos</a>
+              <ul class="mt-1 ml-3 space-y-1">
+                <li><a href="#3-1-courselist" class="block text-sm text-slate-600 hover:text-slate-900 hover:bg-slate-100 rounded px-2 py-1">3.1 CourseList</a></li>
+                <li><a href="#3-2-filegallery" class="block text-sm text-slate-600 hover:text-slate-900 hover:bg-slate-100 rounded px-2 py-1">3.2 FileGallery</a></li>
+                <li><a href="#3-3-dashboardheader" class="block text-sm text-slate-600 hover:text-slate-900 hover:bg-slate-100 rounded px-2 py-1">3.3 DashboardHeader</a></li>
+                <li><a href="#3-4-coursedashboard" class="block text-sm text-slate-600 hover:text-slate-900 hover:bg-slate-100 rounded px-2 py-1">3.4 CourseDashboard</a></li>
+                <li><a href="#3-5-mediamanager" class="block text-sm text-slate-600 hover:text-slate-900 hover:bg-slate-100 rounded px-2 py-1">3.5 MediaManager</a></li>
+              </ul>
+            </li>
+            <li>
+              <a href="#1-átomos-adicionales" class="block text-sm text-slate-600 hover:text-slate-900 hover:bg-slate-100 rounded px-2 py-1">1. Átomos adicionales</a>
+              <ul class="mt-1 ml-3 space-y-1">
+                <li><a href="#1-18-link" class="block text-sm text-slate-600 hover:text-slate-900 hover:bg-slate-100 rounded px-2 py-1">1.18 Link</a></li>
+                <li><a href="#1-19-loader" class="block text-sm text-slate-600 hover:text-slate-900 hover:bg-slate-100 rounded px-2 py-1">1.19 Loader</a></li>
+                <li><a href="#1-20-statusdot" class="block text-sm text-slate-600 hover:text-slate-900 hover:bg-slate-100 rounded px-2 py-1">1.20 StatusDot</a></li>
+                <li><a href="#1-21-icon" class="block text-sm text-slate-600 hover:text-slate-900 hover:bg-slate-100 rounded px-2 py-1">1.21 Icon</a></li>
+              </ul>
+            </li>
+            <li>
+              <a href="#2-moléculas-adicionales" class="block text-sm text-slate-600 hover:text-slate-900 hover:bg-slate-100 rounded px-2 py-1">2. Moléculas adicionales</a>
+              <ul class="mt-1 ml-3 space-y-1">
+                <li><a href="#2-11-breadcrumb" class="block text-sm text-slate-600 hover:text-slate-900 hover:bg-slate-100 rounded px-2 py-1">2.11 Breadcrumb</a></li>
+                <li><a href="#2-12-stepper" class="block text-sm text-slate-600 hover:text-slate-900 hover:bg-slate-100 rounded px-2 py-1">2.12 Stepper</a></li>
+                <li><a href="#2-13-chatbubble" class="block text-sm text-slate-600 hover:text-slate-900 hover:bg-slate-100 rounded px-2 py-1">2.13 ChatBubble</a></li>
+                <li><a href="#2-14-chatinput" class="block text-sm text-slate-600 hover:text-slate-900 hover:bg-slate-100 rounded px-2 py-1">2.14 ChatInput</a></li>
+                <li><a href="#2-15-filterbar" class="block text-sm text-slate-600 hover:text-slate-900 hover:bg-slate-100 rounded px-2 py-1">2.15 FilterBar</a></li>
+                <li><a href="#2-16-videoplayercontrols" class="block text-sm text-slate-600 hover:text-slate-900 hover:bg-slate-100 rounded px-2 py-1">2.16 VideoPlayerControls</a></li>
+                <li><a href="#2-17-chapterlist" class="block text-sm text-slate-600 hover:text-slate-900 hover:bg-slate-100 rounded px-2 py-1">2.17 ChapterList</a></li>
+                <li><a href="#2-18-emojipicker" class="block text-sm text-slate-600 hover:text-slate-900 hover:bg-slate-100 rounded px-2 py-1">2.18 EmojiPicker</a></li>
+                <li><a href="#2-19-gifpicker" class="block text-sm text-slate-600 hover:text-slate-900 hover:bg-slate-100 rounded px-2 py-1">2.19 GifPicker</a></li>
+              </ul>
+            </li>
+            <li>
+              <a href="#3-organismos-adicionales" class="block text-sm text-slate-600 hover:text-slate-900 hover:bg-slate-100 rounded px-2 py-1">3. Organismos adicionales</a>
+              <ul class="mt-1 ml-3 space-y-1">
+                <li><a href="#3-6-chatwindow" class="block text-sm text-slate-600 hover:text-slate-900 hover:bg-slate-100 rounded px-2 py-1">3.6 ChatWindow</a></li>
+                <li><a href="#3-7-videoplayer" class="block text-sm text-slate-600 hover:text-slate-900 hover:bg-slate-100 rounded px-2 py-1">3.7 VideoPlayer</a></li>
+                <li><a href="#3-8-dashboardlayout" class="block text-sm text-slate-600 hover:text-slate-900 hover:bg-slate-100 rounded px-2 py-1">3.8 DashboardLayout</a></li>
+                <li><a href="#3-9-settingspanel" class="block text-sm text-slate-600 hover:text-slate-900 hover:bg-slate-100 rounded px-2 py-1">3.9 SettingsPanel</a></li>
+                <li><a href="#3-10-partnermanagement" class="block text-sm text-slate-600 hover:text-slate-900 hover:bg-slate-100 rounded px-2 py-1">3.10 PartnerManagement</a></li>
+              </ul>
+            </li>
+          </ul>
+        </nav>
+      </aside>
+
+      <!-- Contenido -->
+      <main class="flex-1 min-w-0">
+        <!-- Top bar móvil -->
+        <div class="md:hidden sticky top-0 z-10 bg-white/90 backdrop-blur border-b border-slate-200">
+          <div class="max-w-5xl mx-auto px-4 py-3 flex items-center justify-between">
+            <span class="text-sm font-medium text-slate-700">Guía de Diseño Atómico</span>
+            <a href="#mobileToc" class="inline-flex items-center gap-2 text-xs px-3 py-1.5 rounded-md border border-slate-300 bg-white text-slate-700">
+              Índice
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-4 h-4"><path fill-rule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 11.06l3.71-3.83a.75.75 0 111.08 1.04l-4.25 4.38a.75.75 0 01-1.08 0L5.21 8.27a.75.75 0 01.02-1.06z" clip-rule="evenodd"/></svg>
+            </a>
+          </div>
+        </div>
+
+        <div class="max-w-5xl mx-auto px-4 md:px-8 py-8">
+          <article id="content" class="prose prose-slate lg:prose-lg">
+            <h1 id="guía-de-diseño-atómico-sistema-de-componentes">Guía de Diseño Atómico – Sistema de Componentes</h1>
+            <p>Este documento describe la estructura de componentes basada en la metodología <strong>Atomic Design</strong>.<br>Cada componente incluye su categoría (Átomo, Molécula), nombre estándar, descripción y lista de props.</p>
+            <hr>
+            <h2 id="1-átomos">1. Átomos</h2>
+            <h3 id="1-1-textinput">1.1 TextInput</h3>
+            <p><strong>Descripción:</strong> Campo de entrada de texto estándar.</p>
+            <p><strong>Props:</strong></p>
+            <ul>
+              <li><code>value: string</code> – Texto actual.</li>
+              <li><code>onChange: (value: string) =&gt; void</code> – Callback al cambiar el valor.</li>
+              <li><code>placeholder?: string</code> – Texto placeholder.</li>
+              <li><code>disabled?: boolean</code> – Deshabilita el campo.</li>
+              <li><code>error?: string</code> – Mensaje de error.</li>
+              <li><code>size?: 'sm' | 'md' | 'lg'</code> – Tamaño del campo.</li>
+              <li><code>iconLeft?: ReactNode</code> – Icono al inicio.</li>
+              <li><code>iconRight?: ReactNode</code> – Icono al final.</li>
+            </ul>
+            <hr>
+            <h3 id="1-2-passwordinput">1.2 PasswordInput</h3>
+            <p><strong>Descripción:</strong> Campo para contraseñas con opción de mostrar/ocultar.</p>
+            <p><strong>Props:</strong></p>
+            <ul>
+              <li><code>value: string</code></li>
+              <li><code>onChange: (value: string) =&gt; void</code></li>
+              <li><code>placeholder?: string</code></li>
+              <li><code>disabled?: boolean</code></li>
+              <li><code>error?: string</code></li>
+              <li><code>size?: 'sm' | 'md' | 'lg'</code></li>
+              <li><code>showToggle?: boolean</code> – Mostrar botón para alternar visibilidad.</li>
+            </ul>
+            <hr>
+            <h3 id="1-3-emailinput">1.3 EmailInput</h3>
+            <p><strong>Descripción:</strong> Campo optimizado para correos electrónicos.</p>
+            <p><strong>Props:</strong></p>
+            <ul>
+              <li><code>value: string</code></li>
+              <li><code>onChange: (value: string) =&gt; void</code></li>
+              <li><code>placeholder?: string</code></li>
+              <li><code>disabled?: boolean</code></li>
+              <li><code>error?: string</code></li>
+            </ul>
+            <hr>
+            <h3 id="1-4-numericbadge">1.4 NumericBadge</h3>
+            <p><strong>Descripción:</strong> Etiqueta numérica para notificaciones o contadores.</p>
+            <p><strong>Props:</strong></p>
+            <ul>
+              <li><code>count: number</code></li>
+              <li><code>max?: number</code> – Número máximo mostrado antes de usar formato <code>+99</code>.</li>
+              <li><code>color?: string</code></li>
+              <li><code>size?: 'sm' | 'md' | 'lg'</code></li>
+            </ul>
+            <hr>
+            <h3 id="1-5-button">1.5 Button</h3>
+            <p><strong>Descripción:</strong> Botón de acción principal o secundaria.</p>
+            <p><strong>Props:</strong></p>
+            <ul>
+              <li><code>label: string</code></li>
+              <li><code>onClick: () =&gt; void</code></li>
+              <li><code>variant?: 'primary' | 'secondary' | 'tertiary' | 'danger'</code></li>
+              <li><code>size?: 'sm' | 'md' | 'lg'</code></li>
+              <li><code>iconLeft?: ReactNode</code></li>
+              <li><code>iconRight?: ReactNode</code></li>
+              <li><code>disabled?: boolean</code></li>
+              <li><code>fullWidth?: boolean</code></li>
+            </ul>
+            <hr>
+            <h3 id="1-6-iconbutton">1.6 IconButton</h3>
+            <p><strong>Descripción:</strong> Botón circular o cuadrado que muestra solo un icono.</p>
+            <p><strong>Props:</strong></p>
+            <ul>
+              <li><code>icon: ReactNode</code></li>
+              <li><code>onClick: () =&gt; void</code></li>
+              <li><code>variant?: 'filled' | 'outline' | 'ghost'</code></li>
+              <li><code>size?: 'xs' | 'sm' | 'md' | 'lg'</code></li>
+              <li><code>disabled?: boolean</code></li>
+              <li><code>ariaLabel: string</code> – Accesibilidad.</li>
+            </ul>
+            <hr>
+            <h3 id="1-7-icontoggle">1.7 IconToggle</h3>
+            <p><strong>Descripción:</strong> Botón que alterna entre dos estados (ej. favorito).</p>
+            <p><strong>Props:</strong></p>
+            <ul>
+              <li><code>active: boolean</code></li>
+              <li><code>onToggle: (active: boolean) =&gt; void</code></li>
+              <li><code>iconActive: ReactNode</code></li>
+              <li><code>iconInactive: ReactNode</code></li>
+              <li><code>size?: 'sm' | 'md' | 'lg'</code></li>
+              <li><code>ariaLabel: string</code></li>
+            </ul>
+            <hr>
+            <h3 id="1-8-checkbox">1.8 Checkbox</h3>
+            <p><strong>Descripción:</strong> Casilla de verificación.</p>
+            <p><strong>Props:</strong></p>
+            <ul>
+              <li><code>checked: boolean</code></li>
+              <li><code>onChange: (checked: boolean) =&gt; void</code></li>
+              <li><code>label?: string</code></li>
+              <li><code>disabled?: boolean</code></li>
+            </ul>
+            <hr>
+            <h3 id="1-9-radiobutton">1.9 RadioButton</h3>
+            <p><strong>Descripción:</strong> Opción de selección única.</p>
+            <p><strong>Props:</strong></p>
+            <ul>
+              <li><code>checked: boolean</code></li>
+              <li><code>onChange: () =&gt; void</code></li>
+              <li><code>label?: string</code></li>
+              <li><code>name: string</code></li>
+              <li><code>value: string</code></li>
+              <li><code>disabled?: boolean</code></li>
+            </ul>
+            <hr>
+            <h3 id="1-10-switch">1.10 Switch</h3>
+            <p><strong>Descripción:</strong> Control on/off tipo interruptor.</p>
+            <p><strong>Props:</strong></p>
+            <ul>
+              <li><code>checked: boolean</code></li>
+              <li><code>onChange: (checked: boolean) =&gt; void</code></li>
+              <li><code>size?: 'sm' | 'md' | 'lg'</code></li>
+              <li><code>disabled?: boolean</code></li>
+            </ul>
+            <hr>
+            <h3 id="1-11-tag">1.11 Tag</h3>
+            <p><strong>Descripción:</strong> Etiqueta pequeña con texto o icono.</p>
+            <p><strong>Props:</strong></p>
+            <ul>
+              <li><code>label: string</code></li>
+              <li><code>variant?: 'default' | 'success' | 'warning' | 'error'</code></li>
+              <li><code>iconLeft?: ReactNode</code></li>
+              <li><code>iconRight?: ReactNode</code></li>
+              <li><code>removable?: boolean</code></li>
+              <li><code>onRemove?: () =&gt; void</code></li>
+            </ul>
+            <hr>
+            <h3 id="1-12-avatar">1.12 Avatar</h3>
+            <p><strong>Descripción:</strong> Imagen de usuario u objeto.</p>
+            <p><strong>Props:</strong></p>
+            <ul>
+              <li><code>src: string</code></li>
+              <li><code>alt: string</code></li>
+              <li><code>size?: 'xs' | 'sm' | 'md' | 'lg' | 'xl'</code></li>
+              <li><code>statusDot?: 'online' | 'offline' | 'busy'</code></li>
+              <li><code>onClick?: () =&gt; void</code></li>
+            </ul>
+            <hr>
+            <h3 id="1-13-searchinput">1.13 SearchInput</h3>
+            <p><strong>Descripción:</strong> Campo de búsqueda con icono de lupa integrado.</p>
+            <p><strong>Props:</strong></p>
+            <ul>
+              <li><code>value: string</code></li>
+              <li><code>onChange: (value: string) =&gt; void</code></li>
+              <li><code>placeholder?: string</code></li>
+              <li><code>disabled?: boolean</code></li>
+              <li><code>onClear?: () =&gt; void</code></li>
+            </ul>
+            <hr>
+            <h3 id="1-14-dropdown">1.14 Dropdown</h3>
+            <p><strong>Descripción:</strong> Lista desplegable básica.</p>
+            <p><strong>Props:</strong></p>
+            <ul>
+              <li><code>options: { label: string; value: string }[]</code></li>
+              <li><code>value: string</code></li>
+              <li><code>onChange: (value: string) =&gt; void</code></li>
+              <li><code>placeholder?: string</code></li>
+              <li><code>disabled?: boolean</code></li>
+            </ul>
+            <hr>
+            <h3 id="1-15-tooltip">1.15 Tooltip</h3>
+            <p><strong>Descripción:</strong> Mensaje flotante para información contextual.</p>
+            <p><strong>Props:</strong></p>
+            <ul>
+              <li><code>content: string | ReactNode</code></li>
+              <li><code>position?: 'top' | 'bottom' | 'left' | 'right'</code></li>
+              <li><code>trigger: 'hover' | 'click'</code></li>
+            </ul>
+            <hr>
+            <h3 id="1-16-progressbar">1.16 ProgressBar</h3>
+            <p><strong>Descripción:</strong> Indicador visual de progreso lineal.</p>
+            <p><strong>Props:</strong></p>
+            <ul>
+              <li><code>value: number</code> – Porcentaje completado (0-100).</li>
+              <li><code>color?: string</code></li>
+              <li><code>showLabel?: boolean</code></li>
+            </ul>
+            <hr>
+            <h3 id="1-17-tagstatus">1.17 TagStatus</h3>
+            <p><strong>Descripción:</strong> Etiqueta de estado con color y texto.</p>
+            <p><strong>Props:</strong></p>
+            <ul>
+              <li><code>label: string</code></li>
+              <li><code>status: 'active' | 'inactive' | 'pending' | 'error'</code></li>
+              <li><code>size?: 'sm' | 'md' | 'lg'</code></li>
+            </ul>
+          </article>
+          <div class="max-w-5xl mx-auto px-4 md:px-8 py-0">
+            <article class="prose prose-slate lg:prose-lg">
+              <h2 id="2-moléculas">2. Moléculas</h2>
+              <h3 id="2-1-searchbar">2.1 SearchBar</h3>
+              <p><strong>Descripción:</strong> Barra de búsqueda compuesta por <code>SearchInput</code> y botón de acción.</p>
+              <p><strong>Props:</strong></p>
+              <ul>
+                <li><code>value: string</code></li>
+                <li><code>onChange: (value: string) =&gt; void</code></li>
+                <li><code>onSearch: () =&gt; void</code></li>
+                <li><code>placeholder?: string</code></li>
+                <li><code>filters?: ReactNode</code></li>
+              </ul>
+              <hr>
+              <h3 id="2-2-usermenu">2.2 UserMenu</h3>
+              <p><strong>Descripción:</strong> Menú desplegable para opciones de usuario con avatar.</p>
+              <p><strong>Props:</strong></p>
+              <ul>
+                <li><code>avatarSrc: string</code></li>
+                <li><code>userName: string</code></li>
+                <li><code>options: { label: string; onClick: () =&gt; void }[]</code></li>
+              </ul>
+              <hr>
+              <h3 id="2-3-card">2.3 Card</h3>
+              <p><strong>Descripción:</strong> Contenedor con imagen, título, descripción y acciones.</p>
+              <p><strong>Props:</strong></p>
+              <ul>
+                <li><code>imageSrc?: string</code></li>
+                <li><code>title: string</code></li>
+                <li><code>description?: string</code></li>
+                <li><code>tags?: string[]</code></li>
+                <li><code>onClick?: () =&gt; void</code></li>
+                <li><code>actions?: ReactNode</code></li>
+              </ul>
+              <hr>
+              <h3 id="2-4-mediacard">2.4 MediaCard</h3>
+              <p><strong>Descripción:</strong> Variante de <code>Card</code> para videos o imágenes con overlay.</p>
+              <p><strong>Props:</strong></p>
+              <ul>
+                <li><code>mediaType: 'image' | 'video'</code></li>
+                <li><code>src: string</code></li>
+                <li><code>title: string</code></li>
+                <li><code>subtitle?: string</code></li>
+                <li><code>onClick?: () =&gt; void</code></li>
+                <li><code>overlayContent?: ReactNode</code></li>
+              </ul>
+              <hr>
+              <h3 id="2-5-coursecard">2.5 CourseCard</h3>
+              <p><strong>Descripción:</strong> Tarjeta de curso con estado de progreso.</p>
+              <p><strong>Props:</strong></p>
+              <ul>
+                <li><code>title: string</code></li>
+                <li><code>progress: number</code></li>
+                <li><code>duration?: string</code></li>
+                <li><code>thumbnail: string</code></li>
+                <li><code>onClick: () =&gt; void</code></li>
+              </ul>
+              <hr>
+              <h3 id="2-6-filecard">2.6 FileCard</h3>
+              <p><strong>Descripción:</strong> Tarjeta para representar archivos.</p>
+              <p><strong>Props:</strong></p>
+              <ul>
+                <li><code>fileName: string</code></li>
+                <li><code>fileType: string</code></li>
+                <li><code>thumbnail?: string</code></li>
+                <li><code>onClick?: () =&gt; void</code></li>
+                <li><code>onFavoriteToggle?: () =&gt; void</code></li>
+                <li><code>isFavorite?: boolean</code></li>
+              </ul>
+              <hr>
+              <h3 id="2-7-avatargroup">2.7 AvatarGroup</h3>
+              <p><strong>Descripción:</strong> Grupo de avatares en lista horizontal.</p>
+              <p><strong>Props:</strong></p>
+              <ul>
+                <li><code>avatars: { src: string; alt: string }[]</code></li>
+                <li><code>maxVisible?: number</code></li>
+                <li><code>size?: 'sm' | 'md' | 'lg'</code></li>
+              </ul>
+              <hr>
+              <h3 id="2-8-pagination">2.8 Pagination</h3>
+              <p><strong>Descripción:</strong> Control de paginación numérica.</p>
+              <p><strong>Props:</strong></p>
+              <ul>
+                <li><code>currentPage: number</code></li>
+                <li><code>totalPages: number</code></li>
+                <li><code>onPageChange: (page: number) =&gt; void</code></li>
+              </ul>
+              <hr>
+              <h3 id="2-9-tabs">2.9 Tabs</h3>
+              <p><strong>Descripción:</strong> Navegación por pestañas.</p>
+              <p><strong>Props:</strong></p>
+              <ul>
+                <li><code>tabs: { label: string; value: string }[]</code></li>
+                <li><code>activeTab: string</code></li>
+                <li><code>onTabChange: (value: string) =&gt; void</code></li>
+              </ul>
+              <hr>
+              <h3 id="2-10-sidebarmenu">2.10 SidebarMenu</h3>
+              <p><strong>Descripción:</strong> Menú lateral con ítems y secciones.</p>
+              <p><strong>Props:</strong></p>
+              <ul>
+                <li><code>sections: { title?: string; items: { label: string; icon?: ReactNode; onClick: () =&gt; void }[] }[]</code></li>
+                <li><code>activeItem?: string</code></li>
+              </ul>
+              <hr>
+              <h2 id="3-organismos">3. Organismos</h2>
+              <h3 id="3-1-courselist">3.1 CourseList</h3>
+              <p><strong>Descripción:</strong> Lista de cursos con filtrado y paginación.</p>
+              <p><strong>Props:</strong></p>
+              <ul>
+                <li><code>courses: CourseCard[]</code></li>
+                <li><code>filters?: ReactNode</code></li>
+                <li><code>pagination?: ReactNode</code></li>
+              </ul>
+              <hr>
+              <h3 id="3-2-filegallery">3.2 FileGallery</h3>
+              <p><strong>Descripción:</strong> Galería de archivos con favoritos y filtros.</p>
+              <p><strong>Props:</strong></p>
+              <ul>
+                <li><code>files: FileCard[]</code></li>
+                <li><code>onFilterChange?: () =&gt; void</code></li>
+                <li><code>onSearch?: (query: string) =&gt; void</code></li>
+              </ul>
+              <hr>
+              <h3 id="3-3-dashboardheader">3.3 DashboardHeader</h3>
+              <p><strong>Descripción:</strong> Encabezado con buscador, avatar de usuario y acciones rápidas.</p>
+              <p><strong>Props:</strong></p>
+              <ul>
+                <li><code>onSearch: (query: string) =&gt; void</code></li>
+                <li><code>userMenu: ReactNode</code></li>
+                <li><code>actions?: ReactNode</code></li>
+              </ul>
+              <hr>
+              <h3 id="3-4-coursedashboard">3.4 CourseDashboard</h3>
+              <p><strong>Descripción:</strong> Vista de cursos recientes, filtrados y categorías.</p>
+              <p><strong>Props:</strong></p>
+              <ul>
+                <li><code>recentCourses: CourseCard[]</code></li>
+                <li><code>categories: string[]</code></li>
+                <li><code>onCategorySelect: (category: string) =&gt; void</code></li>
+              </ul>
+              <hr>
+              <h3 id="3-5-mediamanager">3.5 MediaManager</h3>
+              <p><strong>Descripción:</strong> Vista principal para gestionar imágenes y videos.</p>
+              <p><strong>Props:</strong></p>
+              <ul>
+                <li><code>mediaFiles: FileCard[]</code></li>
+                <li><code>onAddMedia: () =&gt; void</code></li>
+                <li><code>onSearch: (query: string) =&gt; void</code></li>
+                <li><code>filters?: ReactNode</code></li>
+              </ul>
+              <hr>
+              <h1 id="guía-de-diseño-atómico-continuación">Guía de Diseño Atómico – Continuación</h1>
+              <h2 id="1-átomos-adicionales">1. Átomos adicionales</h2>
+              <h3 id="1-18-link">1.18 Link</h3>
+              <p><strong>Descripción:</strong> Enlace de navegación o acción.</p>
+              <p><strong>Props:</strong></p>
+              <ul>
+                <li><code>href: string</code></li>
+                <li><code>label: string</code></li>
+                <li><code>target?: '_self' | '_blank'</code></li>
+                <li><code>onClick?: () =&gt; void</code></li>
+                <li><code>disabled?: boolean</code></li>
+              </ul>
+              <hr>
+              <h3 id="1-19-loader">1.19 Loader</h3>
+              <p><strong>Descripción:</strong> Indicador de carga circular o lineal.</p>
+              <p><strong>Props:</strong></p>
+              <ul>
+                <li><code>type?: 'spinner' | 'bar'</code></li>
+                <li><code>size?: 'sm' | 'md' | 'lg'</code></li>
+                <li><code>color?: string</code></li>
+              </ul>
+              <hr>
+              <h3 id="1-20-statusdot">1.20 StatusDot</h3>
+              <p><strong>Descripción:</strong> Indicador de estado pequeño (ej. online/offline).</p>
+              <p><strong>Props:</strong></p>
+              <ul>
+                <li><code>status: 'online' | 'offline' | 'busy' | 'away'</code></li>
+                <li><code>color?: string</code></li>
+                <li><code>size?: 'xs' | 'sm'</code></li>
+              </ul>
+              <hr>
+              <h3 id="1-21-icon">1.21 Icon</h3>
+              <p><strong>Descripción:</strong> Elemento gráfico representando acciones o estados.</p>
+              <p><strong>Props:</strong></p>
+              <ul>
+                <li><code>name: string</code> – Identificador del icono.</li>
+                <li><code>size?: number</code></li>
+                <li><code>color?: string</code></li>
+              </ul>
+              <hr>
+              <h2 id="2-moléculas-adicionales">2. Moléculas adicionales</h2>
+              <h3 id="2-11-breadcrumb">2.11 Breadcrumb</h3>
+              <p><strong>Descripción:</strong> Navegación jerárquica en forma de migas de pan.</p>
+              <p><strong>Props:</strong></p>
+              <ul>
+                <li><code>items: { label: string; href?: string; onClick?: () =&gt; void }[]</code></li>
+                <li><code>separator?: ReactNode</code></li>
+              </ul>
+              <hr>
+              <h3 id="2-12-stepper">2.12 Stepper</h3>
+              <p><strong>Descripción:</strong> Indicador de pasos en un flujo.</p>
+              <p><strong>Props:</strong></p>
+              <ul>
+                <li><code>steps: { label: string; completed?: boolean }[]</code></li>
+                <li><code>activeStep: number</code></li>
+                <li><code>onStepClick?: (index: number) =&gt; void</code></li>
+              </ul>
+              <hr>
+              <h3 id="2-13-chatbubble">2.13 ChatBubble</h3>
+              <p><strong>Descripción:</strong> Burbuja de chat con texto y metadatos.</p>
+              <p><strong>Props:</strong></p>
+              <ul>
+                <li><code>message: string</code></li>
+                <li><code>timestamp?: string</code></li>
+                <li><code>isOwn?: boolean</code></li>
+                <li><code>status?: 'sent' | 'delivered' | 'read'</code></li>
+                <li><code>avatarSrc?: string</code></li>
+              </ul>
+              <hr>
+              <h3 id="2-14-chatinput">2.14 ChatInput</h3>
+              <p><strong>Descripción:</strong> Barra de entrada para chat con acciones rápidas.</p>
+              <p><strong>Props:</strong></p>
+              <ul>
+                <li><code>value: string</code></li>
+                <li><code>onChange: (value: string) =&gt; void</code></li>
+                <li><code>onSend: () =&gt; void</code></li>
+                <li><code>placeholder?: string</code></li>
+                <li><code>actions?: ReactNode</code></li>
+              </ul>
+              <hr>
+              <h3 id="2-15-filterbar">2.15 FilterBar</h3>
+              <p><strong>Descripción:</strong> Conjunto de filtros aplicables a una vista.</p>
+              <p><strong>Props:</strong></p>
+              <ul>
+                <li><code>filters: { label: string; value: string }[]</code></li>
+                <li><code>activeFilter: string</code></li>
+                <li><code>onFilterChange: (value: string) =&gt; void</code></li>
+              </ul>
+              <hr>
+              <h3 id="2-16-videoplayercontrols">2.16 VideoPlayerControls</h3>
+              <p><strong>Descripción:</strong> Controles de un reproductor de video.</p>
+              <p><strong>Props:</strong></p>
+              <ul>
+                <li><code>isPlaying: boolean</code></li>
+                <li><code>onPlayPause: () =&gt; void</code></li>
+                <li><code>onSeek: (time: number) =&gt; void</code></li>
+                <li><code>onVolumeChange: (volume: number) =&gt; void</code></li>
+                <li><code>onFullscreenToggle: () =&gt; void</code></li>
+              </ul>
+              <hr>
+              <h3 id="2-17-chapterlist">2.17 ChapterList</h3>
+              <p><strong>Descripción:</strong> Lista de capítulos con miniatura y timestamp.</p>
+              <p><strong>Props:</strong></p>
+              <ul>
+                <li><code>chapters: { title: string; timestamp: string; thumbnail?: string }[]</code></li>
+                <li><code>onChapterSelect: (index: number) =&gt; void</code></li>
+                <li><code>activeChapter?: number</code></li>
+              </ul>
+              <hr>
+              <h3 id="2-18-emojipicker">2.18 EmojiPicker</h3>
+              <p><strong>Descripción:</strong> Selector de emojis categorizados.</p>
+              <p><strong>Props:</strong></p>
+              <ul>
+                <li><code>categories: { name: string; emojis: string[] }[]</code></li>
+                <li><code>onSelect: (emoji: string) =&gt; void</code></li>
+              </ul>
+              <hr>
+              <h3 id="2-19-gifpicker">2.19 GifPicker</h3>
+              <p><strong>Descripción:</strong> Selector de GIFs con búsqueda.</p>
+              <p><strong>Props:</strong></p>
+              <ul>
+                <li><code>gifs: { url: string; title?: string }[]</code></li>
+                <li><code>onSelect: (gifUrl: string) =&gt; void</code></li>
+                <li><code>onSearch: (query: string) =&gt; void</code></li>
+              </ul>
+              <hr>
+              <h2 id="3-organismos-adicionales">3. Organismos adicionales</h2>
+              <h3 id="3-6-chatwindow">3.6 ChatWindow</h3>
+              <p><strong>Descripción:</strong> Composición de lista de mensajes y entrada de texto.</p>
+              <p><strong>Props:</strong></p>
+              <ul>
+                <li><code>messages: ChatBubble[]</code></li>
+                <li><code>onSendMessage: (text: string) =&gt; void</code></li>
+                <li><code>onLoadMore?: () =&gt; void</code></li>
+              </ul>
+              <hr>
+              <h3 id="3-7-videoplayer">3.7 VideoPlayer</h3>
+              <p><strong>Descripción:</strong> Composición del reproductor de video con controles y lista de capítulos.</p>
+              <p><strong>Props:</strong></p>
+              <ul>
+                <li><code>src: string</code></li>
+                <li><code>controls: ReactNode</code></li>
+                <li><code>chapters?: ChapterList</code></li>
+                <li><code>subtitles?: string</code></li>
+              </ul>
+              <hr>
+              <h3 id="3-8-dashboardlayout">3.8 DashboardLayout</h3>
+              <p><strong>Descripción:</strong> Distribución general de panel con navegación y contenido.</p>
+              <p><strong>Props:</strong></p>
+              <ul>
+                <li><code>sidebar: ReactNode</code></li>
+                <li><code>header: ReactNode</code></li>
+                <li><code>content: ReactNode</code></li>
+              </ul>
+              <hr>
+              <h3 id="3-9-settingspanel">3.9 SettingsPanel</h3>
+              <p><strong>Descripción:</strong> Vista de configuración con secciones editables.</p>
+              <p><strong>Props:</strong></p>
+              <ul>
+                <li><code>sections: { title: string; content: ReactNode }[]</code></li>
+              </ul>
+              <hr>
+              <h3 id="3-10-partnermanagement">3.10 PartnerManagement</h3>
+              <p><strong>Descripción:</strong> Vista para gestión de socios, con tabla, filtros y detalles.</p>
+              <p><strong>Props:</strong></p>
+              <ul>
+                <li><code>partners: any[]</code></li>
+                <li><code>onEdit: (partner: any) =&gt; void</code></li>
+                <li><code>onDelete: (id: string) =&gt; void</code></li>
+                <li><code>filters?: ReactNode</code></li>
+              </ul>
+            </article>
+          </div>
+        </div>
+      </main>
+    </div>
+
+    <!-- Drawer móvil del TOC -->
+    <div id="mobileToc" class="fixed inset-0 z-20">
+      <a href="#" class="absolute inset-0 bg-black/30" data-close></a>
+      <div class="ml-auto h-full w-80 max-w-full bg-white shadow-xl border-l border-slate-200 flex flex-col">
+        <div class="px-5 py-4 border-b border-slate-200 flex items-center justify-between">
+          <h2 class="text-sm font-semibold text-slate-700">Índice</h2>
+          <a href="#" data-close class="text-slate-500 hover:text-slate-700">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-5 h-5"><path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"/></svg>
+          </a>
+        </div>
+        <nav id="tocMobile" class="flex-1 overflow-y-auto p-4">
+          <ul class="space-y-1">
+            <li>
+              <a href="#1-átomos" class="block text-sm text-slate-700">1. Átomos</a>
+              <ul class="mt-1 ml-3 space-y-1">
+                <li><a href="#1-1-textinput" class="block text-sm text-slate-600">1.1 TextInput</a></li>
+                <li><a href="#1-2-passwordinput" class="block text-sm text-slate-600">1.2 PasswordInput</a></li>
+                <li><a href="#1-3-emailinput" class="block text-sm text-slate-600">1.3 EmailInput</a></li>
+                <li><a href="#1-4-numericbadge" class="block text-sm text-slate-600">1.4 NumericBadge</a></li>
+                <li><a href="#1-5-button" class="block text-sm text-slate-600">1.5 Button</a></li>
+                <li><a href="#1-6-iconbutton" class="block text-sm text-slate-600">1.6 IconButton</a></li>
+                <li><a href="#1-7-icontoggle" class="block text-sm text-slate-600">1.7 IconToggle</a></li>
+                <li><a href="#1-8-checkbox" class="block text-sm text-slate-600">1.8 Checkbox</a></li>
+                <li><a href="#1-9-radiobutton" class="block text-sm text-slate-600">1.9 RadioButton</a></li>
+                <li><a href="#1-10-switch" class="block text-sm text-slate-600">1.10 Switch</a></li>
+                <li><a href="#1-11-tag" class="block text-sm text-slate-600">1.11 Tag</a></li>
+                <li><a href="#1-12-avatar" class="block text-sm text-slate-600">1.12 Avatar</a></li>
+                <li><a href="#1-13-searchinput" class="block text-sm text-slate-600">1.13 SearchInput</a></li>
+                <li><a href="#1-14-dropdown" class="block text-sm text-slate-600">1.14 Dropdown</a></li>
+                <li><a href="#1-15-tooltip" class="block text-sm text-slate-600">1.15 Tooltip</a></li>
+                <li><a href="#1-16-progressbar" class="block text-sm text-slate-600">1.16 ProgressBar</a></li>
+                <li><a href="#1-17-tagstatus" class="block text-sm text-slate-600">1.17 TagStatus</a></li>
+              </ul>
+            </li>
+            <li>
+              <a href="#2-moléculas" class="block text-sm text-slate-700">2. Moléculas</a>
+              <ul class="mt-1 ml-3 space-y-1">
+                <li><a href="#2-1-searchbar" class="block text-sm text-slate-600">2.1 SearchBar</a></li>
+                <li><a href="#2-2-usermenu" class="block text-sm text-slate-600">2.2 UserMenu</a></li>
+                <li><a href="#2-3-card" class="block text-sm text-slate-600">2.3 Card</a></li>
+                <li><a href="#2-4-mediacard" class="block text-sm text-slate-600">2.4 MediaCard</a></li>
+                <li><a href="#2-5-coursecard" class="block text-sm text-slate-600">2.5 CourseCard</a></li>
+                <li><a href="#2-6-filecard" class="block text-sm text-slate-600">2.6 FileCard</a></li>
+                <li><a href="#2-7-avatargroup" class="block text-sm text-slate-600">2.7 AvatarGroup</a></li>
+                <li><a href="#2-8-pagination" class="block text-sm text-slate-600">2.8 Pagination</a></li>
+                <li><a href="#2-9-tabs" class="block text-sm text-slate-600">2.9 Tabs</a></li>
+                <li><a href="#2-10-sidebarmenu" class="block text-sm text-slate-600">2.10 SidebarMenu</a></li>
+              </ul>
+            </li>
+            <li>
+              <a href="#3-organismos" class="block text-sm text-slate-700">3. Organismos</a>
+              <ul class="mt-1 ml-3 space-y-1">
+                <li><a href="#3-1-courselist" class="block text-sm text-slate-600">3.1 CourseList</a></li>
+                <li><a href="#3-2-filegallery" class="block text-sm text-slate-600">3.2 FileGallery</a></li>
+                <li><a href="#3-3-dashboardheader" class="block text-sm text-slate-600">3.3 DashboardHeader</a></li>
+                <li><a href="#3-4-coursedashboard" class="block text-sm text-slate-600">3.4 CourseDashboard</a></li>
+                <li><a href="#3-5-mediamanager" class="block text-sm text-slate-600">3.5 MediaManager</a></li>
+              </ul>
+            </li>
+            <li>
+              <a href="#1-átomos-adicionales" class="block text-sm text-slate-700">1. Átomos adicionales</a>
+              <ul class="mt-1 ml-3 space-y-1">
+                <li><a href="#1-18-link" class="block text-sm text-slate-600">1.18 Link</a></li>
+                <li><a href="#1-19-loader" class="block text-sm text-slate-600">1.19 Loader</a></li>
+                <li><a href="#1-20-statusdot" class="block text-sm text-slate-600">1.20 StatusDot</a></li>
+                <li><a href="#1-21-icon" class="block text-sm text-slate-600">1.21 Icon</a></li>
+              </ul>
+            </li>
+            <li>
+              <a href="#2-moléculas-adicionales" class="block text-sm text-slate-700">2. Moléculas adicionales</a>
+              <ul class="mt-1 ml-3 space-y-1">
+                <li><a href="#2-11-breadcrumb" class="block text-sm text-slate-600">2.11 Breadcrumb</a></li>
+                <li><a href="#2-12-stepper" class="block text-sm text-slate-600">2.12 Stepper</a></li>
+                <li><a href="#2-13-chatbubble" class="block text-sm text-slate-600">2.13 ChatBubble</a></li>
+                <li><a href="#2-14-chatinput" class="block text-sm text-slate-600">2.14 ChatInput</a></li>
+                <li><a href="#2-15-filterbar" class="block text-sm text-slate-600">2.15 FilterBar</a></li>
+                <li><a href="#2-16-videoplayercontrols" class="block text-sm text-slate-600">2.16 VideoPlayerControls</a></li>
+                <li><a href="#2-17-chapterlist" class="block text-sm text-slate-600">2.17 ChapterList</a></li>
+                <li><a href="#2-18-emojipicker" class="block text-sm text-slate-600">2.18 EmojiPicker</a></li>
+                <li><a href="#2-19-gifpicker" class="block text-sm text-slate-600">2.19 GifPicker</a></li>
+              </ul>
+            </li>
+            <li>
+              <a href="#3-organismos-adicionales" class="block text-sm text-slate-700">3. Organismos adicionales</a>
+              <ul class="mt-1 ml-3 space-y-1">
+                <li><a href="#3-6-chatwindow" class="block text-sm text-slate-600">3.6 ChatWindow</a></li>
+                <li><a href="#3-7-videoplayer" class="block text-sm text-slate-600">3.7 VideoPlayer</a></li>
+                <li><a href="#3-8-dashboardlayout" class="block text-sm text-slate-600">3.8 DashboardLayout</a></li>
+                <li><a href="#3-9-settingspanel" class="block text-sm text-slate-600">3.9 SettingsPanel</a></li>
+                <li><a href="#3-10-partnermanagement" class="block text-sm text-slate-600">3.10 PartnerManagement</a></li>
+              </ul>
+            </li>
+          </ul>
+        </nav>
+      </div>
+    </div>
+  </body>
+  </html>
+
+

@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistema de Widgets Multiplataforma - Guía de Arquitectura</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: {
+                            50: '#eff6ff',
+                            500: '#3b82f6',
+                            600: '#2563eb',
+                            700: '#1d4ed8',
+                            900: '#1e3a8a'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .gradient-bg {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        .card-hover {
+            transition: all 0.3s ease;
+        }
+        .card-hover:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        }
+        .code-block {
+            background: #1f2937;
+            border-radius: 0.5rem;
+            padding: 1rem;
+            font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+            font-size: 0.875rem;
+            line-height: 1.5;
+            overflow-x: auto;
+        }
+        .timeline-item {
+            position: relative;
+        }
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: #3b82f6;
+        }
+    </style>
+</head>
+<body class="bg-gray-50 text-gray-900">
+    <!-- Header -->
+    <header class="gradient-bg text-white">
+        <div class="container mx-auto px-6 py-16">
+            <div class="text-center">
+                <h1 class="text-5xl font-bold mb-4">Sistema de Widgets Multiplataforma</h1>
+                <p class="text-xl mb-6 opacity-90">Guía de Arquitectura, Desarrollo & Publicación</p>
+                <div class="flex items-center justify-center space-x-4 text-sm">
+                    <span class="bg-white bg-opacity-20 px-3 py-1 rounded-full">Versión 1.0</span>
+                    <span class="bg-white bg-opacity-20 px-3 py-1 rounded-full">Julio 2025</span>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Navigation -->
+    <nav class="bg-white shadow-sm sticky top-0 z-50">
+        <div class="container mx-auto px-6">
+            <div class="flex items-center justify-between h-16">
+                <div class="flex items-center space-x-8">
+                    <a href="#principios" class="text-gray-700 hover:text-primary-600 transition-colors">Principios</a>
+                    <a href="#arquitectura" class="text-gray-700 hover:text-primary-600 transition-colors">Arquitectura</a>
+                    <a href="#instalacion" class="text-gray-700 hover:text-primary-600 transition-colors">Instalación</a>
+                    <a href="#comunicacion" class="text-gray-700 hover:text-primary-600 transition-colors">Comunicación</a>
+                    <a href="#roadmap" class="text-gray-700 hover:text-primary-600 transition-colors">Roadmap</a>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <span class="text-sm text-gray-500">Documentación técnica</span>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="container mx-auto px-6 py-12">
+        <!-- Principios de diseño -->
+        <section id="principios" class="mb-16">
+            <div class="text-center mb-12">
+                <h2 class="text-4xl font-bold text-gray-900 mb-4">1 · Principios de diseño</h2>
+                <p class="text-xl text-gray-600 max-w-3xl mx-auto">Fundamentos arquitectónicos que guían el desarrollo de nuestro sistema de widgets multiplataforma</p>
+            </div>
+            
+            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <div class="bg-white rounded-xl shadow-lg p-6 card-hover">
+                    <div class="w-12 h-12 bg-primary-100 rounded-lg flex items-center justify-center mb-4">
+                        <svg class="w-6 h-6 text-primary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"></path>
+                        </svg>
+                    </div>
+                    <h3 class="text-lg font-semibold mb-2">Un solo código ≠ un solo build</h3>
+                    <p class="text-gray-600">Core TypeScript + Web Components; wrappers finos para React / Vue / Angular</p>
+                </div>
+
+                <div class="bg-white rounded-xl shadow-lg p-6 card-hover">
+                    <div class="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center mb-4">
+                        <svg class="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path>
+                        </svg>
+                    </div>
+                    <h3 class="text-lg font-semibold mb-2">Instalación flexible</h3>
+                    <p class="text-gray-600">Bundles ESM (npm) + UMD/IIFE (CDN) para máxima compatibilidad</p>
+                </div>
+
+                <div class="bg-white rounded-xl shadow-lg p-6 card-hover">
+                    <div class="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center mb-4">
+                        <svg class="w-6 h-6 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zM21 5a2 2 0 00-2-2h-4a2 2 0 00-2 2v12a4 4 0 004 4h4a2 2 0 002-2V5z"></path>
+                        </svg>
+                    </div>
+                    <h3 class="text-lg font-semibold mb-2">Aislado y tematizable</h3>
+                    <p class="text-gray-600">Shadow DOM + preset Tailwind v4; design-tokens via CSS vars</p>
+                </div>
+
+                <div class="bg-white rounded-xl shadow-lg p-6 card-hover">
+                    <div class="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center mb-4">
+                        <svg class="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path>
+                        </svg>
+                    </div>
+                    <h3 class="text-lg font-semibold mb-2">Comunicación clara</h3>
+                    <p class="text-gray-600">Props/atributos como componente; postMessage + MessageChannel en iframe</p>
+                </div>
+
+                <div class="bg-white rounded-xl shadow-lg p-6 card-hover">
+                    <div class="w-12 h-12 bg-orange-100 rounded-lg flex items-center justify-center mb-4">
+                        <svg class="w-6 h-6 text-orange-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"></path>
+                        </svg>
+                    </div>
+                    <h3 class="text-lg font-semibold mb-2">DX first</h3>
+                    <p class="text-gray-600">Monorepo (Nx/Turbo), CI semántico, Storybook + Typedoc</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Arquitectura técnica -->
+        <section id="arquitectura" class="mb-16">
+            <div class="text-center mb-12">
+                <h2 class="text-4xl font-bold text-gray-900 mb-4">2 · Arquitectura técnica</h2>
+                <p class="text-xl text-gray-600 max-w-3xl mx-auto">Estructura modular y escalable para el desarrollo de widgets</p>
+            </div>
+
+            <div class="bg-white rounded-xl shadow-lg p-8">
+                <div class="code-block text-green-400 mb-6">
+                    <div class="text-gray-400 mb-2">📁 Estructura del proyecto:</div>
+                    <div class="ml-4">
+                        <div>/apps</div>
+                        <div class="ml-4">└─ examples/              # demos (React, Vue, Angular, Vanilla)</div>
+                        <div>/packages</div>
+                        <div class="ml-4">├─ core/                  # Web Components + hooks</div>
+                        <div class="ml-4">├─ &lt;widget&gt;/              # p.e. carousel/, uploader/, …</div>
+                        <div class="ml-4">├─ &lt;widget&gt;-react/        # wrapper React (ídem -vue / -angular)</div>
+                        <div class="ml-4">├─ tailwind-preset/       # design tokens</div>
+                        <div class="ml-4">└─ embed-script/          # loader CDN / iframe</div>
+                    </div>
+                </div>
+
+                <div class="grid md:grid-cols-3 gap-6">
+                    <div class="bg-gray-50 rounded-lg p-4">
+                        <h4 class="font-semibold text-gray-900 mb-2">Build</h4>
+                        <p class="text-sm text-gray-600">Vite + Lit 3 · targets ESM/CJS/UMD · d.ts</p>
+                    </div>
+                    <div class="bg-gray-50 rounded-lg p-4">
+                        <h4 class="font-semibold text-gray-900 mb-2">Wrappers</h4>
+                        <p class="text-sm text-gray-600">Generados con @lit-labs</p>
+                    </div>
+                    <div class="bg-gray-50 rounded-lg p-4">
+                        <h4 class="font-semibold text-gray-900 mb-2">Tests</h4>
+                        <p class="text-sm text-gray-600">Vitest (unit) + Playwright (e2e)</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Instalación y empaquetado -->
+        <section id="instalacion" class="mb-16">
+            <div class="text-center mb-12">
+                <h2 class="text-4xl font-bold text-gray-900 mb-4">3 · Instalación & empaquetado por componente</h2>
+                <p class="text-xl text-gray-600 max-w-3xl mx-auto">Sistema de distribución modular y flexible</p>
+            </div>
+
+            <div class="grid lg:grid-cols-2 gap-8">
+                <div class="bg-white rounded-xl shadow-lg p-6">
+                    <h3 class="text-xl font-semibold mb-4 text-gray-900">Estructura de paquetes</h3>
+                    <ul class="space-y-3 text-gray-600">
+                        <li class="flex items-start">
+                            <span class="w-2 h-2 bg-primary-500 rounded-full mt-2 mr-3 flex-shrink-0"></span>
+                            <span>Cada widget = paquete <code class="bg-gray-100 px-1 rounded">@acme/&lt;widget&gt;</code></span>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="w-2 h-2 bg-primary-500 rounded-full mt-2 mr-3 flex-shrink-0"></span>
+                            <span>Wrappers: <code class="bg-gray-100 px-1 rounded">@acme/&lt;widget&gt;-react</code>, <code class="bg-gray-100 px-1 rounded">-vue</code>, <code class="bg-gray-100 px-1 rounded">-angular</code></span>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="w-2 h-2 bg-primary-500 rounded-full mt-2 mr-3 flex-shrink-0"></span>
+                            <span>Declarar <strong>peerDependencies</strong> (react, vue, @angular/core, …)</span>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="w-2 h-2 bg-primary-500 rounded-full mt-2 mr-3 flex-shrink-0"></span>
+                            <span>Build filtrado por componente</span>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="bg-white rounded-xl shadow-lg p-6">
+                    <h3 class="text-xl font-semibold mb-4 text-gray-900">Comandos de instalación</h3>
+                    <div class="code-block text-green-400 mb-4">
+                        <div class="text-gray-400"># Widget aislado</div>
+                        <div>npm i @acme/carousel</div>
+                        <div class="text-gray-400 mt-2"># Bundle completo</div>
+                        <div>npm i @acme/widgets</div>
+                        <div class="text-gray-400 mt-2"># Build específico</div>
+                        <div>pnpm build --filter @acme/carousel...</div>
+                    </div>
+                    <p class="text-sm text-gray-600">Bundle UMD en CDN → <code class="bg-gray-100 px-1 rounded">https://cdn.acme.io/carousel@1.2.0.js</code></p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Comunicación host ⇄ widget -->
+        <section id="comunicacion" class="mb-16">
+            <div class="text-center mb-12">
+                <h2 class="text-4xl font-bold text-gray-900 mb-4">4 · Comunicación host ⇄ widget</h2>
+                <p class="text-xl text-gray-600 max-w-3xl mx-auto">Protocolos de comunicación robustos y flexibles</p>
+            </div>
+
+            <div class="grid lg:grid-cols-2 gap-8">
+                <div class="bg-white rounded-xl shadow-lg p-6">
+                    <h3 class="text-xl font-semibold mb-4 text-gray-900">Como componente</h3>
+                    <ul class="space-y-2 text-gray-600 mb-4">
+                        <li>• Props / atributos</li>
+                        <li>• CustomEvents (select, ready, …)</li>
+                    </ul>
+                    <div class="code-block text-green-400">
+                        <div class="text-gray-400">// Ejemplo de uso</div>
+                        <div>&lt;acme-carousel</div>
+                        <div class="ml-4">images="[{'id': '1', 'src': 'img1.jpg'}]"</div>
+                        <div class="ml-4">autoplay="true"</div>
+                        <div class="ml-4">@select="handleSelect"&gt;</div>
+                        <div>&lt;/acme-carousel&gt;</div>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-xl shadow-lg p-6">
+                    <h3 class="text-xl font-semibold mb-4 text-gray-900">Como iframe</h3>
+                    <div class="code-block text-green-400">
+                        <div>&lt;iframe id="car" src="https://widgets.acme.io/carousel"&gt;&lt;/iframe&gt;</div>
+                        <div>&lt;script type="module"&gt;</div>
+                        <div class="ml-4">const ch = new MessageChannel();</div>
+                        <div class="ml-4">car.contentWindow.postMessage({</div>
+                        <div class="ml-8">type:'init', port:ch.port2</div>
+                        <div class="ml-4">}, '*', [ch.port2]);</div>
+                        <div class="ml-4">ch.port1.onmessage = ({data}) =&gt; console.log('event', data);</div>
+                        <div class="ml-4">ch.port1.postMessage({</div>
+                        <div class="ml-8">type:'update', props:{autoplay:false}</div>
+                        <div class="ml-4">});</div>
+                        <div>&lt;/script&gt;</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Roadmap -->
+        <section id="roadmap" class="mb-16">
+            <div class="text-center mb-12">
+                <h2 class="text-4xl font-bold text-gray-900 mb-4">8 · Roadmap de implementación</h2>
+                <p class="text-xl text-gray-600 max-w-3xl mx-auto">Plan de desarrollo estructurado en 10 semanas</p>
+            </div>
+
+            <div class="bg-white rounded-xl shadow-lg p-8">
+                <div class="space-y-6">
+                    <div class="timeline-item pl-8">
+                        <div class="bg-blue-50 border-l-4 border-blue-500 p-4 rounded-r-lg">
+                            <h4 class="font-semibold text-blue-900">Semana 1</h4>
+                            <p class="text-blue-700">Setup monorepo, Tailwind preset, Hello World WC</p>
+                        </div>
+                    </div>
+                    
+                    <div class="timeline-item pl-8">
+                        <div class="bg-green-50 border-l-4 border-green-500 p-4 rounded-r-lg">
+                            <h4 class="font-semibold text-green-900">Semanas 2-3</h4>
+                            <p class="text-green-700">Carousel core + wrapper React + Storybook</p>
+                        </div>
+                    </div>
+                    
+                    <div class="timeline-item pl-8">
+                        <div class="bg-purple-50 border-l-4 border-purple-500 p-4 rounded-r-lg">
+                            <h4 class="font-semibold text-purple-900">Semana 4</h4>
+                            <p class="text-purple-700">Wrappers Vue & Angular, generator</p>
+                        </div>
+                    </div>
+                    
+                    <div class="timeline-item pl-8">
+                        <div class="bg-orange-50 border-l-4 border-orange-500 p-4 rounded-r-lg">
+                            <h4 class="font-semibold text-orange-900">Semana 5</h4>
+                            <p class="text-orange-700">Loader CDN + protocolo postMessage v1</p>
+                        </div>
+                    </div>
+                    
+                    <div class="timeline-item pl-8">
+                        <div class="bg-indigo-50 border-l-4 border-indigo-500 p-4 rounded-r-lg">
+                            <h4 class="font-semibold text-indigo-900">Semana 6</h4>
+                            <p class="text-indigo-700">Tokens & sitio de documentación</p>
+                        </div>
+                    </div>
+                    
+                    <div class="timeline-item pl-8">
+                        <div class="bg-red-50 border-l-4 border-red-500 p-4 rounded-r-lg">
+                            <h4 class="font-semibold text-red-900">Semana 7</h4>
+                            <p class="text-red-700">QA matrix (Playwright)</p>
+                        </div>
+                    </div>
+                    
+                    <div class="timeline-item pl-8">
+                        <div class="bg-yellow-50 border-l-4 border-yellow-500 p-4 rounded-r-lg">
+                            <h4 class="font-semibold text-yellow-900">Semana 8</h4>
+                            <p class="text-yellow-700">Beta pública (@next)</p>
+                        </div>
+                    </div>
+                    
+                    <div class="timeline-item pl-8">
+                        <div class="bg-teal-50 border-l-4 border-teal-500 p-4 rounded-r-lg">
+                            <h4 class="font-semibold text-teal-900">Semanas 9-10</h4>
+                            <p class="text-teal-700">Accesibilidad, hardening, release v1</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Checklist final -->
+        <section class="mb-16">
+            <div class="text-center mb-12">
+                <h2 class="text-4xl font-bold text-gray-900 mb-4">12 · Checklist final de producción</h2>
+                <p class="text-xl text-gray-600 max-w-3xl mx-auto">Puntos críticos para un lanzamiento exitoso</p>
+            </div>
+
+            <div class="bg-white rounded-xl shadow-lg p-8">
+                <div class="grid md:grid-cols-2 gap-6">
+                    <div class="space-y-4">
+                        <div class="flex items-center">
+                            <svg class="w-5 h-5 text-green-500 mr-3" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+                            </svg>
+                            <span class="text-gray-700">exports, types y source-maps correctos</span>
+                        </div>
+                        <div class="flex items-center">
+                            <svg class="w-5 h-5 text-green-500 mr-3" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+                            </svg>
+                            <span class="text-gray-700">ADR para versiones y canales (latest / next)</span>
+                        </div>
+                        <div class="flex items-center">
+                            <svg class="w-5 h-5 text-green-500 mr-3" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+                            </svg>
+                            <span class="text-gray-700">Deprecación documentada + changelog + codemods</span>
+                        </div>
+                        <div class="flex items-center">
+                            <svg class="w-5 h-5 text-green-500 mr-3" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+                            </svg>
+                            <span class="text-gray-700">Telemetría opt-in (GDPR/CCPA)</span>
+                        </div>
+                    </div>
+                    <div class="space-y-4">
+                        <div class="flex items-center">
+                            <svg class="w-5 h-5 text-green-500 mr-3" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+                            </svg>
+                            <span class="text-gray-700">Sourcemaps subidos a Sentry/Bugsnag</span>
+                        </div>
+                        <div class="flex items-center">
+                            <svg class="w-5 h-5 text-green-500 mr-3" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+                            </svg>
+                            <span class="text-gray-700">axe-playwright en CI (AA)</span>
+                        </div>
+                        <div class="flex items-center">
+                            <svg class="w-5 h-5 text-green-500 mr-3" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+                            </svg>
+                            <span class="text-gray-700">size-limit ≤ 10 kB gzip por widget</span>
+                        </div>
+                        <div class="flex items-center">
+                            <svg class="w-5 h-5 text-green-500 mr-3" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+                            </svg>
+                            <span class="text-gray-700">Canary deployments (next.acme.io) para QA continua</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-gray-900 text-white py-12">
+        <div class="container mx-auto px-6">
+            <div class="text-center">
+                <h3 class="text-2xl font-bold mb-4">¡Listo!</h3>
+                <p class="text-gray-400 mb-6">Guía completa en formato Markdown convertida a página web moderna</p>
+                <div class="flex justify-center space-x-6">
+                    <a href="#" class="text-gray-400 hover:text-white transition-colors">Documentación</a>
+                    <a href="#" class="text-gray-400 hover:text-white transition-colors">GitHub</a>
+                    <a href="#" class="text-gray-400 hover:text-white transition-colors">NPM</a>
+                    <a href="#" class="text-gray-400 hover:text-white transition-colors">Storybook</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Smooth scrolling script -->
+    <script>
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+    </script>
+</body>
+</html>
