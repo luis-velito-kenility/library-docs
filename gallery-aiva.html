@@ -1,0 +1,465 @@
+<!doctype html>
+<html lang="es">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Galería de Componentes - Video Card Auto Usado</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: { 
+                        sans: ["Inter", "ui-sans-serif", "system-ui", "sans-serif"] 
+                    },
+                    colors: {
+                        brand: {
+                            50: '#f0f9ff',
+                            100: '#e0f2fe',
+                            200: '#bae6fd',
+                            300: '#7dd3fc',
+                            400: '#38bdf8',
+                            500: '#0ea5e9',
+                            600: '#0284c7',
+                            700: '#0369a1',
+                            800: '#075985',
+                            900: '#0c4a6e'
+                        }
+                    },
+                    animation: {
+                        'fade-in': 'fadeIn 0.5s ease-in-out',
+                        'slide-up': 'slideUp 0.3s ease-out',
+                        'pulse-soft': 'pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite'
+                    },
+                    keyframes: {
+                        fadeIn: {
+                            '0%': { opacity: '0', transform: 'translateY(10px)' },
+                            '100%': { opacity: '1', transform: 'translateY(0)' }
+                        },
+                        slideUp: {
+                            '0%': { opacity: '0', transform: 'translateY(20px)' },
+                            '100%': { opacity: '1', transform: 'translateY(0)' }
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        html { scroll-behavior: smooth; }
+        .gradient-bg {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        .glass-effect {
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        .hover-lift {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .hover-lift:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+        }
+        .search-highlight {
+            background: linear-gradient(90deg, #fbbf24, #f59e0b);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+    </style>
+</head>
+<body class="bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100 min-h-screen" x-data="componentGallery()">
+    <!-- Navbar -->
+    <nav class="sticky top-0 z-50 glass-effect border-b border-white/20">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <div class="flex items-center space-x-4">
+                    <div class="flex items-center space-x-2">
+                        <div class="w-8 h-8 bg-gradient-to-r from-brand-500 to-brand-600 rounded-lg flex items-center justify-center">
+                            <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"></path>
+                            </svg>
+                        </div>
+                        <h1 class="text-xl font-bold text-gray-900">Video Card Auto Usado</h1>
+                    </div>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <button @click="sidebarOpen = !sidebarOpen" class="lg:hidden p-2 rounded-md text-gray-600 hover:text-gray-900 hover:bg-white/50">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                        </svg>
+                    </button>
+                    <div class="text-sm text-gray-600">
+                        <span x-text="filteredComponents.length"></span> componentes
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="flex max-w-7xl mx-auto">
+        <!-- Sidebar -->
+        <aside class="sticky top-16 h-[calc(100vh-4rem)] w-80 glass-effect border-r border-white/20 hidden lg:flex flex-col"
+               :class="{ 'fixed inset-y-0 left-0 z-50 lg:relative lg:z-auto': sidebarOpen }"
+               x-show="sidebarOpen || window.innerWidth >= 1024"
+               @click.away="sidebarOpen = false">
+            
+            <!-- Search Bar -->
+            <div class="p-6 border-b border-white/20">
+                <div class="relative">
+                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                        <svg class="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                        </svg>
+                    </div>
+                    <input type="text" 
+                           x-model="searchQuery"
+                           placeholder="Buscar componentes..."
+                           class="block w-full pl-10 pr-3 py-3 border border-white/30 rounded-xl leading-5 bg-white/50 text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-transparent transition-all duration-200">
+                </div>
+                
+                <!-- Filter chips -->
+                <div class="flex flex-wrap gap-2 mt-4">
+                    <template x-for="category in categories" :key="category.id">
+                        <button @click="toggleCategory(category.id)"
+                                class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium transition-all duration-200"
+                                :class="selectedCategories.includes(category.id) ? 
+                                        'bg-brand-500 text-white shadow-md' : 
+                                        'bg-white/60 text-gray-700 hover:bg-white/80'">
+                            <span x-html="category.icon" class="w-4 h-4 mr-1"></span>
+                            <span x-text="category.name"></span>
+                        </button>
+                    </template>
+                </div>
+            </div>
+
+            <!-- Navigation -->
+            <nav class="flex-1 overflow-y-auto p-6">
+                <template x-for="category in categories" :key="category.id">
+                    <div class="mb-6">
+                        <button @click="category.expanded = !category.expanded"
+                                class="flex items-center justify-between w-full text-left p-3 rounded-xl hover:bg-white/50 transition-all duration-200 group">
+                            <div class="flex items-center space-x-3">
+                                <span x-html="category.icon" 
+                                      class="w-6 h-6 text-brand-600 group-hover:scale-110 transition-transform duration-200"></span>
+                                <span class="font-semibold text-gray-900" x-text="category.name"></span>
+                                <span class="text-xs bg-brand-100 text-brand-700 px-2 py-1 rounded-full" 
+                                      x-text="category.components.length"></span>
+                            </div>
+                            <svg class="w-5 h-5 text-gray-400 transform transition-transform duration-200"
+                                 :class="{ 'rotate-180': category.expanded }"
+                                 fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                            </svg>
+                        </button>
+                        
+                        <div x-show="category.expanded" x-collapse class="mt-2 ml-9 space-y-1">
+                            <template x-for="component in category.components" :key="component.id">
+                                <button @click="scrollToComponent(component.id)"
+                                        class="block w-full text-left p-2 text-sm text-gray-600 hover:text-brand-600 hover:bg-brand-50/50 rounded-lg transition-all duration-200">
+                                    <span x-text="component.name"></span>
+                                </button>
+                            </template>
+                        </div>
+                    </div>
+                </template>
+            </nav>
+
+            <!-- Stats Footer -->
+            <div class="p-6 border-t border-white/20 bg-white/30">
+                <div class="grid grid-cols-3 gap-4 text-center">
+                    <div>
+                        <div class="text-2xl font-bold text-brand-600" x-text="getTotalByCategory('atoms')"></div>
+                        <div class="text-xs text-gray-600">Átomos</div>
+                    </div>
+                    <div>
+                        <div class="text-2xl font-bold text-brand-600" x-text="getTotalByCategory('molecules')"></div>
+                        <div class="text-xs text-gray-600">Moléculas</div>
+                    </div>
+                    <div>
+                        <div class="text-2xl font-bold text-brand-600" x-text="getTotalByCategory('organisms')"></div>
+                        <div class="text-xs text-gray-600">Organismos</div>
+                    </div>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="flex-1 p-6 lg:p-8">
+            <!-- Header -->
+            <div class="mb-8">
+                <h2 class="text-3xl font-bold text-gray-900 mb-2">Análisis de Componentes UI - Video Card de Auto Usado</h2>
+                <p class="text-gray-600 text-lg">Clasificación usando Atomic Design para componentes de interfaz de video de autos usados</p>
+            </div>
+
+            <!-- Results info -->
+            <div class="flex items-center justify-between mb-6" x-show="searchQuery || selectedCategories.length > 0">
+                <div class="text-sm text-gray-600">
+                    <span x-text="filteredComponents.length"></span> componentes encontrados
+                    <template x-if="searchQuery">
+                        <span> para "<span class="search-highlight font-semibold" x-text="searchQuery"></span>"</span>
+                    </template>
+                </div>
+                <button @click="clearFilters()" class="text-sm text-brand-600 hover:text-brand-700 font-medium">
+                    Limpiar filtros
+                </button>
+            </div>
+
+            <!-- Components Grid -->
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                <template x-for="component in filteredComponents" :key="component.id">
+                    <div :id="component.id" 
+                         class="bg-white/70 backdrop-blur-sm rounded-2xl shadow-lg hover-lift border border-white/40 overflow-hidden animate-fade-in flex flex-col h-full">
+                        
+                        <!-- Card Header -->
+                        <div class="p-6 pb-4 flex-grow">
+                            <div class="flex items-start justify-between mb-4">
+                                <div class="flex items-center space-x-3">
+                                    <div class="w-12 h-12 rounded-xl flex items-center justify-center"
+                                         :class="getCategoryStyle(component.category).bg">
+                                        <span x-html="getCategoryIcon(component.category)" 
+                                              class="w-6 h-6"
+                                              :class="getCategoryStyle(component.category).text"></span>
+                                    </div>
+                                    <div>
+                                        <h3 class="text-lg font-bold text-gray-900" x-text="component.name"></h3>
+                                        <span class="text-xs font-medium px-2 py-1 rounded-full"
+                                              :class="getCategoryStyle(component.category).badge"
+                                              x-text="getCategoryName(component.category)"></span>
+                                    </div>
+                                </div>
+                                <div class="flex space-x-2">
+                                    <button class="p-2 text-gray-400 hover:text-brand-500 hover:bg-brand-50 rounded-lg transition-all duration-200">
+                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path>
+                                        </svg>
+                                    </button>
+                                    <button class="p-2 text-gray-400 hover:text-red-500 hover:bg-red-50 rounded-lg transition-all duration-200">
+                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path>
+                                        </svg>
+                                    </button>
+                                </div>
+                            </div>
+                            <p class="text-gray-600 text-sm leading-relaxed" x-text="component.description"></p>
+                        </div>
+
+                        <!-- Props Section -->
+                        <div class="px-6 pb-6">
+                            <div class="bg-slate-50/80 rounded-xl p-4">
+                                <h4 class="text-sm font-semibold text-gray-900 mb-3 flex items-center">
+                                    <svg class="w-4 h-4 mr-2 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"></path>
+                                    </svg>
+                                    Props
+                                    <span class="ml-auto bg-gray-200 text-gray-700 text-xs px-2 py-1 rounded-full" 
+                                          x-text="component.props.length"></span>
+                                </h4>
+                                <div class="space-y-2">
+                                    <template x-for="prop in component.props" :key="prop">
+                                        <div class="text-xs">
+                                            <code class="bg-white/80 px-2 py-1 rounded text-brand-700 font-mono" x-text="prop"></code>
+                                        </div>
+                                    </template>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </template>
+            </div>
+
+            <!-- Empty state -->
+            <div x-show="filteredComponents.length === 0" class="text-center py-16">
+                <div class="w-24 h-24 mx-auto mb-6 bg-gray-100 rounded-full flex items-center justify-center">
+                    <svg class="w-12 h-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                    </svg>
+                </div>
+                <h3 class="text-xl font-semibold text-gray-900 mb-2">No se encontraron componentes</h3>
+                <p class="text-gray-600 mb-6">Intenta ajustar tus filtros o términos de búsqueda</p>
+                <button @click="clearFilters()" class="bg-brand-500 text-white px-6 py-2 rounded-lg hover:bg-brand-600 transition-colors">
+                    Limpiar filtros
+                </button>
+            </div>
+        </main>
+    </div>
+
+    <!-- Mobile sidebar overlay -->
+    <div x-show="sidebarOpen" 
+         x-transition:enter="transition-opacity ease-linear duration-300"
+         x-transition:enter-start="opacity-0"
+         x-transition:enter-end="opacity-100"
+         x-transition:leave="transition-opacity ease-linear duration-300"
+         x-transition:leave-start="opacity-100"
+         x-transition:leave-end="opacity-0"
+         class="fixed inset-0 z-40 lg:hidden">
+        <div class="absolute inset-0 bg-black/50" @click="sidebarOpen = false"></div>
+    </div>
+
+    <script>
+        function componentGallery() {
+            return {
+                sidebarOpen: false,
+                searchQuery: '',
+                selectedCategories: [],
+                
+                categories: [
+                    {
+                        id: 'atoms',
+                        name: 'Átomos',
+                        icon: '⚛️',
+                        expanded: true,
+                        components: [
+                            { id: 'button', name: 'Button', description: 'Elemento básico de UI que no puede descomponerse más.', category: 'atoms', props: ['children: React.ReactNode', 'onClick: () => void', 'variant?: "primary" | "secondary" | "outline" | "ghost"', 'size?: "small" | "medium" | "large"', 'disabled?: boolean', 'loading?: boolean', 'fullWidth?: boolean', 'className?: string'] },
+                            { id: 'playbutton', name: 'PlayButton', description: 'Botón de reproducción para controles de video.', category: 'atoms', props: ['isPlaying: boolean', 'onClick: () => void', 'size?: "small" | "medium" | "large"', 'variant?: "primary" | "secondary"'] },
+                            { id: 'mutebutton', name: 'MuteButton', description: 'Botón para controlar el audio del video.', category: 'atoms', props: ['isMuted: boolean', 'onClick: () => void', 'size?: "small" | "medium" | "large"'] },
+                            { id: 'fullscreenbutton', name: 'FullscreenButton', description: 'Botón para alternar pantalla completa.', category: 'atoms', props: ['isFullscreen: boolean', 'onClick: () => void', 'size?: "small" | "medium" | "large"'] },
+                            { id: 'progressbar', name: 'ProgressBar', description: 'Barra de progreso para el tiempo del video.', category: 'atoms', props: ['currentTime: number', 'duration: number', 'onSeek: (time: number) => void', 'buffered?: number', 'className?: string'] },
+                            { id: 'logo', name: 'Logo', description: 'Logo de marca o empresa.', category: 'atoms', props: ['src: string', 'alt: string', 'width?: number', 'height?: number', 'brand?: string'] },
+                            { id: 'dealeravatar', name: 'DealerAvatar', description: 'Avatar del concesionario con información de verificación.', category: 'atoms', props: ['src?: string', 'alt: string', 'name: string', 'size?: "small" | "medium" | "large"', 'verified?: boolean'] }
+                        ]
+                    },
+                    {
+                        id: 'molecules',
+                        name: 'Moléculas',
+                        icon: '🧬',
+                        expanded: true,
+                        components: [
+                            { id: 'actionbutton', name: 'ActionButton', description: 'Combinaciones simples de átomos que funcionan juntos.', category: 'molecules', props: ['label: string', 'onClick: () => void', 'variant?: "primary" | "secondary" | "outline"', 'size?: "small" | "medium" | "large"', 'disabled?: boolean', 'icon?: React.ReactNode'] },
+                            { id: 'volumecontrol', name: 'VolumeControl', description: 'Control de volumen con botón de mute integrado.', category: 'molecules', props: ['volume: number', 'isMuted: boolean', 'onVolumeChange: (volume: number) => void', 'onMute: () => void', 'orientation?: "horizontal" | "vertical"'] },
+                            { id: 'videocontrols', name: 'VideoControls', description: 'Conjunto de controles para el reproductor de video.', category: 'molecules', props: ['isPlaying: boolean', 'isMuted: boolean', 'currentTime: number', 'duration: number', 'volume: number', 'onPlayPause: () => void', 'onMute: () => void', 'onSeek: (time: number) => void', 'onVolumeChange: (volume: number) => void'] },
+                            { id: 'cardheader', name: 'CardHeader', description: 'Encabezado de tarjeta con título y subtítulo.', category: 'molecules', props: ['title: string', 'subtitle?: string', 'className?: string'] },
+                            { id: 'contactinfo', name: 'ContactInfo', description: 'Información de contacto del concesionario.', category: 'molecules', props: ['email: string', 'phone: string', 'location: string', 'layout?: "vertical" | "horizontal"'] },
+                            { id: 'card', name: 'Card', description: 'Contenedor base para otros componentes.', category: 'molecules', props: ['children: React.ReactNode', 'elevation?: number', 'rounded?: boolean', 'padding?: string', 'background?: string', 'border?: boolean', 'className?: string'] }
+                        ]
+                    },
+                    {
+                        id: 'organisms',
+                        name: 'Organismos',
+                        icon: '🦠',
+                        expanded: true,
+                        components: [
+                            { id: 'videoplayer', name: 'VideoPlayer', description: 'Grupos complejos de moléculas que forman secciones de interfaz.', category: 'organisms', props: ['src: string', 'poster?: string', 'controls: boolean', 'autoplay?: boolean', 'muted?: boolean', 'width: string | number', 'height: string | number'] },
+                            { id: 'dealerinfo', name: 'DealerInfo', description: 'Información completa del concesionario con avatar y rating.', category: 'organisms', props: ['name: string', 'email: string', 'phone: string', 'location: string', 'avatar?: string', 'rating?: number', 'verified?: boolean'] },
+                            { id: 'cardcontent', name: 'CardContent', description: 'Contenido principal de la tarjeta con descripción.', category: 'organisms', props: ['children: React.ReactNode', 'description?: string', 'className?: string'] },
+                            { id: 'container', name: 'Container', description: 'Contenedor principal con configuraciones de layout.', category: 'organisms', props: ['children: React.ReactNode', 'maxWidth?: string', 'padding?: string', 'background?: string', 'className?: string'] }
+                        ]
+                    },
+                    {
+                        id: 'templates',
+                        name: 'Templates',
+                        icon: '📱',
+                        expanded: true,
+                        components: [
+                            { id: 'videocard', name: 'VideoCard', description: 'Combinación completa de organismos que forman la interfaz final.', category: 'templates', props: ['title: string', 'description: string', 'videoUrl: string', 'thumbnailUrl?: string', 'dealerInfo: DealerInfo', 'actions: ActionButton[]'] }
+                        ]
+                    }
+                ],
+
+                get allComponents() {
+                    return this.categories.flatMap(cat => cat.components);
+                },
+
+                get filteredComponents() {
+                    let components = this.allComponents;
+                    
+                    if (this.selectedCategories.length > 0) {
+                        components = components.filter(comp => 
+                            this.selectedCategories.includes(comp.category)
+                        );
+                    }
+                    
+                    if (this.searchQuery) {
+                        const query = this.searchQuery.toLowerCase();
+                        components = components.filter(comp =>
+                            comp.name.toLowerCase().includes(query) ||
+                            comp.description.toLowerCase().includes(query) ||
+                            comp.props.some(prop => prop.toLowerCase().includes(query))
+                        );
+                    }
+                    
+                    return components;
+                },
+
+                toggleCategory(categoryId) {
+                    if (this.selectedCategories.includes(categoryId)) {
+                        this.selectedCategories = this.selectedCategories.filter(id => id !== categoryId);
+                    } else {
+                        this.selectedCategories.push(categoryId);
+                    }
+                },
+
+                clearFilters() {
+                    this.searchQuery = '';
+                    this.selectedCategories = [];
+                },
+
+                scrollToComponent(componentId) {
+                    document.getElementById(componentId)?.scrollIntoView({ 
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                    this.sidebarOpen = false;
+                },
+
+                getCategoryIcon(category) {
+                    const icons = {
+                        atoms: '<svg class="w-full h-full" fill="none" stroke="currentColor" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"></circle><path d="M12 1v6m0 6v6"></path><path d="m9 9 3-3 3 3"></path><path d="m9 15 3 3 3-3"></path></svg>',
+                        molecules: '<svg class="w-full h-full" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path></svg>',
+                        organisms: '<svg class="w-full h-full" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path></svg>',
+                        templates: '<svg class="w-full h-full" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 5a1 1 0 011-1h14a1 1 0 011 1v2a1 1 0 01-1 1H5a1 1 0 01-1-1V5zM4 13a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H5a1 1 0 01-1-1v-6zM16 13a1 1 0 011-1h2a1 1 0 011 1v6a1 1 0 01-1 1h-2a1 1 0 01-1-1v-6z"></path></svg>'
+                    };
+                    return icons[category] || icons.atoms;
+                },
+
+                getCategoryStyle(category) {
+                    const styles = {
+                        atoms: {
+                            bg: 'bg-emerald-100',
+                            text: 'text-emerald-600',
+                            badge: 'bg-emerald-100 text-emerald-800'
+                        },
+                        molecules: {
+                            bg: 'bg-blue-100',
+                            text: 'text-blue-600',
+                            badge: 'bg-blue-100 text-blue-800'
+                        },
+                        organisms: {
+                            bg: 'bg-purple-100',
+                            text: 'text-purple-600',
+                            badge: 'bg-purple-100 text-purple-800'
+                        },
+                        templates: {
+                            bg: 'bg-orange-100',
+                            text: 'text-orange-600',
+                            badge: 'bg-orange-100 text-orange-800'
+                        }
+                    };
+                    return styles[category] || styles.atoms;
+                },
+
+                getCategoryName(category) {
+                    const names = {
+                        atoms: 'Átomo',
+                        molecules: 'Molécula',
+                        organisms: 'Organismo',
+                        templates: 'Template'
+                    };
+                    return names[category] || 'Componente';
+                },
+
+                getTotalByCategory(category) {
+                    return this.categories.find(cat => cat.id === category)?.components.length || 0;
+                }
+            }
+        }
+    </script>
+</body>
+</html>
